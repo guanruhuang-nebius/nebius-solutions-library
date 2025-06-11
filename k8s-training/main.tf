@@ -11,6 +11,22 @@ resource "nebius_mk8s_v1_cluster" "k8s-cluster" {
   }
 }
 
+module "cilium-egress-gateway" {
+  count  = var.enable_egress_gateway ? 1 : 0
+  source = "../modules/cilium-egress-gateway"
+
+  mk8s_cluster_id = resource.nebius_mk8s_v1_cluster.k8s-cluster.id
+  mk8s_version    = var.k8s_version
+  project_id      = var.parent_id
+  ssh_user_name   = var.ssh_user_name
+  ssh_public_key  = local.ssh_public_key
+  subnet_id       = var.subnet_id
+
+  depends_on = [
+    resource.nebius_mk8s_v1_node_group.cpu-only
+  ]
+}
+
 data "nebius_iam_v1_group" "editors" {
   count     = var.enable_k8s_node_group_sa ? 1 : 0
   name      = "editors"
