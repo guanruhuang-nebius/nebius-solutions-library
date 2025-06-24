@@ -73,6 +73,8 @@ resources:
             %{~ endif ~}
           vmStack:
             enabled: ${telemetry_enabled}
+            projectId: ${iam_project_id}
+            publicEndpointEnabled: ${public_o11y_enabled}
             crds:
               interval: 5m
               timeout: 5m

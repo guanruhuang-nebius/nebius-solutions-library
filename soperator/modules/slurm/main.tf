@@ -110,6 +110,7 @@ resource "helm_release" "soperator_fluxcd_cm" {
     backups_enabled    = var.backups_enabled
     telemetry_enabled  = var.telemetry_enabled
     accounting_enabled = var.accounting_enabled
+    iam_project_id     = var.iam_project_id
 
     dcgm_job_mapping_enabled = var.dcgm_job_mapping_enabled
 
