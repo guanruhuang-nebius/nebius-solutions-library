@@ -329,19 +329,15 @@ resources:
                   path: /sys
                   type: Directory
 
-              %{~ if slurm_cluster.default_prolog_enabled ~}
-              - name: slurm-prolog
+              - name: slurm-scripts
                 configMap:
-                  name: slurm-prolog
+                  name: slurm-scripts
                   defaultMode: 500
-              %{~ endif ~}
 
-              %{~ if slurm_cluster.default_epilog_enabled ~}
-              - name: slurm-epilog
+              - name: custom-scripts
                 configMap:
-                  name: slurm-epilog
+                  name: custom-scripts
                   defaultMode: 500
-              %{~ endif ~}
 
               %{~ if slurm_cluster.node_local_image_storage.enabled ~}
               - name: image-storage
@@ -374,12 +370,9 @@ resources:
 
             slurmConfig:
               defMemPerNode: ${floor(slurm_cluster.nodes.worker.resources.memory * 1024)}
-              %{~ if slurm_cluster.default_prolog_enabled ~}
+
               prolog: /etc/slurm-scripts/prolog.sh
-              %{~ endif ~}
-              %{~ if slurm_cluster.default_epilog_enabled ~}
               epilog: /etc/slurm-scripts/epilog.sh
-              %{~ endif ~}
 
             slurmNodes:
               accounting:
@@ -550,20 +543,14 @@ resources:
                       mountPath: /mnt/jail.upper/sys-host
                       readOnly: true
                       volumeSourceName: sys-host
-                    %{~ if slurm_cluster.default_prolog_enabled ~}
-                    - name: slurm-prolog
-                      mountPath: /etc/slurm-scripts/prolog.sh
-                      subPath: prolog.sh
+                    - name: slurm-scripts
+                      mountPath: /etc/slurm-scripts/
                       readOnly: true
-                      volumeSourceName: slurm-prolog
-                    %{~ endif ~}
-                    %{~ if slurm_cluster.default_epilog_enabled ~}
-                    - name: slurm-epilog
-                      mountPath: /etc/slurm-scripts/epilog.sh
-                      subPath: epilog.sh
+                      volumeSourceName: slurm-scripts
+                    - name: custom-scripts
+                      mountPath: /mnt/jail/opt/soperator/custom-scripts/
                       readOnly: true
-                      volumeSourceName: slurm-epilog
-                    %{~ endif ~}
+                      volumeSourceName: custom-scripts
                     %{~ if slurm_cluster.node_local_image_storage.enabled ~}
                     - name: enroot-on-image-storage
                       mountPath: /etc/enroot/enroot.conf.d/image-storage.conf
@@ -643,20 +630,14 @@ resources:
                       mountPath: /mnt/jail.upper/sys-host
                       readOnly: true
                       volumeSourceName: sys-host
-                    %{~ if slurm_cluster.default_prolog_enabled ~}
-                    - name: slurm-prolog
-                      mountPath: /etc/slurm-scripts/prolog.sh
-                      subPath: prolog.sh
+                    - name: slurm-scripts
+                      mountPath: /etc/slurm-scripts/
                       readOnly: true
-                      volumeSourceName: slurm-prolog
-                    %{~ endif ~}
-                    %{~ if slurm_cluster.default_epilog_enabled ~}
-                    - name: slurm-epilog
-                      mountPath: /etc/slurm-scripts/epilog.sh
-                      subPath: epilog.sh
+                      volumeSourceName: slurm-scripts
+                    - name: custom-scripts
+                      mountPath: /mnt/jail/opt/soperator/custom-scripts/
                       readOnly: true
-                      volumeSourceName: slurm-epilog
-                    %{~ endif ~}
+                      volumeSourceName: custom-scripts
 
               exporter:
                 enabled: ${slurm_cluster.nodes.exporter.enabled}

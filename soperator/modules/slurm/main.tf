@@ -183,9 +183,6 @@ resource "helm_release" "soperator_fluxcd_cm" {
 
       nfs = var.nfs
 
-      default_prolog_enabled = var.default_prolog_enabled
-      default_epilog_enabled = var.default_epilog_enabled
-
       nccl_topology_type = var.nccl_topology_type
       nccl_benchmark = {
         enable         = var.nccl_benchmark_enable
