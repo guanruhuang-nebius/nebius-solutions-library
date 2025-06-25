@@ -32,10 +32,11 @@ resources:
           values: null
         observability:
           enabled: ${telemetry_enabled}
+          clusterName: ${cluster_name}
+          publicEndpointEnabled: ${public_o11y_enabled}
+          projectId: ${iam_project_id}
           opentelemetry:
             enabled: ${telemetry_enabled}
-            clusterName: ${cluster_name}
-            publicEndpointEnabled: ${public_o11y_enabled}
             logs:
               %{~ if opentelemetry_collector_version != "" ~}
               version: ${opentelemetry_collector_version}
@@ -43,7 +44,6 @@ resources:
               interval: 5m
               timeout: 5m
               values:
-                publicEndpointEnabled: ${public_o11y_enabled}
                 resources:
                   requests:
                     memory: ${resources.logs_collector.memory}
@@ -57,7 +57,6 @@ resources:
               interval: 5m
               timeout: 5m
               values:
-                publicEndpointEnabled: ${public_o11y_enabled}
                 resources:
                   requests:
                     memory: ${resources.events_collector.memory}
@@ -73,8 +72,6 @@ resources:
             %{~ endif ~}
           vmStack:
             enabled: ${telemetry_enabled}
-            projectId: ${iam_project_id}
-            publicEndpointEnabled: ${public_o11y_enabled}
             crds:
               interval: 5m
               timeout: 5m
