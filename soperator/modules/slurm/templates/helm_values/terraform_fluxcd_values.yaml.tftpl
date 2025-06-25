@@ -366,8 +366,8 @@ resources:
             slurmConfig:
               defMemPerNode: ${floor(slurm_cluster.nodes.worker.resources.memory * 1024)}
 
-              prolog: /etc/slurm-scripts/prolog.sh
-              epilog: /etc/slurm-scripts/epilog.sh
+              prolog: /opt/slurm-scripts/prolog.sh
+              epilog: /opt/slurm-scripts/epilog.sh
 
             slurmNodes:
               accounting:
@@ -539,11 +539,11 @@ resources:
                       readOnly: true
                       volumeSourceName: sys-host
                     - name: slurm-scripts
-                      mountPath: /etc/slurm-scripts/
+                      mountPath: /opt/slurm-scripts/
                       readOnly: true
                       volumeSourceName: slurm-scripts
-                    - name: slurm-scripts
-                      mountPath: /mnt/jail.upper/opt/soperator/slurm-scripts/
+                    - name: slurm-scripts-jail
+                      mountPath: /mnt/jail.upper/opt/slurm-scripts/
                       readOnly: true
                       volumeSourceName: slurm-scripts
                     %{~ if slurm_cluster.node_local_image_storage.enabled ~}
@@ -626,11 +626,11 @@ resources:
                       readOnly: true
                       volumeSourceName: sys-host
                     - name: slurm-scripts
-                      mountPath: /etc/slurm-scripts/
+                      mountPath: /opt/slurm-scripts/
                       readOnly: true
                       volumeSourceName: slurm-scripts
-                    - name: slurm-scripts
-                      mountPath: /mnt/jail.upper/opt/soperator/slurm-scripts/
+                    - name: slurm-scripts-jail
+                      mountPath: /mnt/jail.upper/opt/slurm-scripts/
                       readOnly: true
                       volumeSourceName: slurm-scripts
 
