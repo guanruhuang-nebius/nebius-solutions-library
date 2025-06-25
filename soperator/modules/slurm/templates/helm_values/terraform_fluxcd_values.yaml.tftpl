@@ -334,11 +334,6 @@ resources:
                   name: slurm-scripts
                   defaultMode: 500
 
-              - name: custom-scripts
-                configMap:
-                  name: custom-scripts
-                  defaultMode: 500
-
               %{~ if slurm_cluster.node_local_image_storage.enabled ~}
               - name: image-storage
                 configMap:
@@ -547,10 +542,10 @@ resources:
                       mountPath: /etc/slurm-scripts/
                       readOnly: true
                       volumeSourceName: slurm-scripts
-                    - name: custom-scripts
-                      mountPath: /mnt/jail/opt/soperator/custom-scripts/
+                    - name: slurm-scripts
+                      mountPath: /mnt/jail.upper/opt/soperator/slurm-scripts/
                       readOnly: true
-                      volumeSourceName: custom-scripts
+                      volumeSourceName: slurm-scripts
                     %{~ if slurm_cluster.node_local_image_storage.enabled ~}
                     - name: enroot-on-image-storage
                       mountPath: /etc/enroot/enroot.conf.d/image-storage.conf
@@ -634,10 +629,10 @@ resources:
                       mountPath: /etc/slurm-scripts/
                       readOnly: true
                       volumeSourceName: slurm-scripts
-                    - name: custom-scripts
-                      mountPath: /mnt/jail/opt/soperator/custom-scripts/
+                    - name: slurm-scripts
+                      mountPath: /mnt/jail.upper/opt/soperator/slurm-scripts/
                       readOnly: true
-                      volumeSourceName: custom-scripts
+                      volumeSourceName: slurm-scripts
 
               exporter:
                 enabled: ${slurm_cluster.nodes.exporter.enabled}
