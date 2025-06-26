@@ -358,14 +358,6 @@ slurm_exporter_enabled = true
 # ---
 slurm_shared_memory_size_gibibytes = 1024
 
-# Whether to enable default Slurm Prolog script that drain nodes with bad GPUs.
-# ---
-default_prolog_enabled = true
-
-# Whether to enable default Slurm Epilog script that drain nodes with bad GPUs.
-# ---
-default_epilog_enabled = true
-
 # endregion Config
 
 #----------------------------------------------------------------------------------------------------------------------#

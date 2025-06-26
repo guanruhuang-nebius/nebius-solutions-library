@@ -286,18 +286,6 @@ variable "shared_memory_size_gibibytes" {
   default     = 64
 }
 
-variable "default_prolog_enabled" {
-  description = "Whether to enable default Slurm Prolog script that drain nodes with bad GPUs."
-  type        = bool
-  default     = true
-}
-
-variable "default_epilog_enabled" {
-  description = "Whether to enable default Slurm Epilog script that drain nodes with bad GPUs."
-  type        = bool
-  default     = true
-}
-
 # endregion Config
 
 # region NCCLSettings
