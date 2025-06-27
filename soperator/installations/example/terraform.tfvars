@@ -110,7 +110,7 @@ node_local_image_disk = {
     size_gibibytes  = 930
     filesystem_type = "ext4"
     # Could be changed to `NETWORK_SSD_NON_REPLICATED`
-    disk_type       = "NETWORK_SSD_IO_M3"
+    disk_type = "NETWORK_SSD_IO_M3"
   }
 }
 
@@ -160,7 +160,7 @@ nfs = {
 
 # Version of soperator.
 # ---
-slurm_operator_version = "1.20.1"
+slurm_operator_version = "1.21.0"
 
 # Is the version of soperator stable or not.
 # ---
