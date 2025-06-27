@@ -160,7 +160,7 @@ nfs = {
 
 # Version of soperator.
 # ---
-slurm_operator_version = "1.20.1"
+slurm_operator_version = "1.21.0"
 
 # Is the version of soperator stable or not.
 # ---
@@ -358,14 +358,6 @@ slurm_exporter_enabled = true
 # ---
 slurm_shared_memory_size_gibibytes = 1024
 
-# Whether to enable default Slurm Prolog script that drain nodes with bad GPUs.
-# ---
-default_prolog_enabled = true
-
-# Whether to enable default Slurm Epilog script that drain nodes with bad GPUs.
-# ---
-default_epilog_enabled = true
-
 # endregion Config
 
 #----------------------------------------------------------------------------------------------------------------------#
@@ -377,9 +369,9 @@ default_epilog_enabled = true
 
 # Whether to enable NCCL benchmark CronJob to benchmark GPU performance.
 # It won't take effect in case of 1-GPU hosts.
-# By default, true.
+# By default, false.
 # ---
-nccl_benchmark_enable = true
+nccl_benchmark_enable = false
 
 # NCCL benchmark's CronJob schedule.
 # By default, `0 */3 * * *` - every 3 hour.
@@ -483,8 +475,9 @@ backups_retention = {
 # region k8s
 
 # Version of the k8s to be used.
+# Set to null or don't set to use Nebius default (recommended), or specify explicitly
 # ---
-k8s_version = "1.30"
+# k8s_version = 1.30
 
 # SSH user credentials for accessing k8s nodes.
 # That option add public ip address to every node.

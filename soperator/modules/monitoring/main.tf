@@ -14,9 +14,8 @@ locals {
 }
 resource "helm_release" "dashboard" {
   for_each = tomap({
-    slurm_exporter         = "exporter"
-    kube_state_metrics     = "kube-state-metrics"
-    pod_resources          = "pod-resources"
+    cluster_health         = "cluster-health"
+    pod_metrics            = "pod-metrics"
     jobs_overview          = "jobs-overview"
     workers_overview       = "workers-overview"
     workers_detailed_stats = "workers-detailed-stats"
@@ -29,10 +28,21 @@ resource "helm_release" "dashboard" {
 
   namespace = local.namespace.monitoring
 
-  values = [templatefile("${path.module}/templates/dashboards/${each.key}.yaml.tftpl", {
-    namespace = local.namespace.monitoring
-    name      = "${var.slurm_cluster_name}-${each.value}"
-    filename  = "${each.value}.json"
+  values = [yamlencode({
+    resources = [{
+      apiVersion = "v1"
+      kind       = "ConfigMap"
+      metadata = {
+        namespace = local.namespace.monitoring
+        name      = "${var.slurm_cluster_name}-${each.value}"
+        labels = {
+          grafana_dashboard = "1"
+        }
+      }
+      data = {
+        "${each.value}.json" = file("${path.module}/templates/dashboards/${each.key}.json")
+      }
+    }]
   })]
 
   wait = true

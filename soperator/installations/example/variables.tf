@@ -409,11 +409,11 @@ resource "terraform_data" "check_nfs" {
 variable "k8s_version" {
   description = "Version of the k8s to be used."
   type        = string
-  default     = "1.30"
+  default     = null
 
   validation {
-    condition     = length(regexall("^[\\d]+\\.[\\d]+$", var.k8s_version)) == 1
-    error_message = "The k8s cluster version now only supports version in format `<MAJOR>.<MINOR>`."
+    condition     = var.k8s_version == null || can(regex("^[\\d]+\\.[\\d]+$", var.k8s_version))
+    error_message = "The k8s cluster version must be null or in format `<MAJOR>.<MINOR>`."
   }
 }
 
@@ -770,18 +770,6 @@ variable "slurm_shared_memory_size_gibibytes" {
   default     = 64
 }
 
-variable "default_prolog_enabled" {
-  description = "Whether to enable default Slurm Prolog script that drain nodes with bad GPUs."
-  type        = bool
-  default     = true
-}
-
-variable "default_epilog_enabled" {
-  description = "Whether to enable default Slurm Epilog script that drain nodes with bad GPUs."
-  type        = bool
-  default     = true
-}
-
 # endregion Config
 
 # region NCCL benchmark
@@ -789,7 +777,7 @@ variable "default_epilog_enabled" {
 variable "nccl_benchmark_enable" {
   description = "Whether to enable NCCL benchmark CronJob to benchmark GPU performance. It won't take effect in case of 1-GPU hosts."
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "nccl_benchmark_schedule" {
