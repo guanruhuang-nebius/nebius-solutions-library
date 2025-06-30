@@ -340,7 +340,7 @@ slurm_login_ssh_root_public_keys = [
 # Whether to enable Slurm metrics exporter.
 # By default, true.
 # ---
-slurm_exporter_enabled = true
+slurm_exporter_enabled = false
 
 # endregion Exporter
 

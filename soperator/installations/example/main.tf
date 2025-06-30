@@ -297,6 +297,8 @@ module "slurm" {
   slurm_health_check_config    = var.slurm_health_check_config
   flux_namespace               = local.flux_namespace
   backups_enabled              = local.backups_enabled
+  region                       = var.region
+
 
   github_org              = var.github_org
   github_repository       = var.github_repository

@@ -297,12 +297,12 @@ variable "node_local_image_disk" {
     condition = (var.node_local_image_disk.spec == null
       ? true
       : (contains(
-          [
-            module.resources.disk_types.network_ssd_non_replicated,
-            module.resources.disk_types.network_ssd_io_m3,
-          ],
-          var.node_local_image_disk.spec.disk_type
-        ))
+        [
+          module.resources.disk_types.network_ssd_non_replicated,
+          module.resources.disk_types.network_ssd_io_m3,
+        ],
+        var.node_local_image_disk.spec.disk_type
+      ))
     )
     error_message = "Local image disk type must be one of `NETWORK_SSD_NON_REPLICATED` or `NETWORK_SSD_IO_M3`. See https://docs.nebius.com/compute/storage/types#disks-types"
   }
@@ -745,7 +745,7 @@ variable "slurm_login_ssh_root_public_keys" {
 variable "slurm_exporter_enabled" {
   description = "Whether to enable Slurm metrics exporter."
   type        = bool
-  default     = true
+  default     = false
 }
 
 # endregion Exporter
