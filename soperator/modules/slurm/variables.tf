@@ -484,7 +484,7 @@ variable "resources_vm_single" {
   default = {
     memory     = "24Gi"
     cpu        = "6000m"
-    size       = "80Gi"
+    size       = "512Gi"
     gomaxprocs = 6
   }
 }

@@ -63,9 +63,6 @@ kubectl --context ${self.triggers_replace.k8s_cluster_context} create secret gen
   -n ${self.triggers_replace.o11y_secret_logs_namespace} \
   --from-literal=accessToken="$TOKEN"
 echo "Creating secret..."
-kubectl --context ${self.triggers_replace.k8s_cluster_context} create secret generic ${self.triggers_replace.o11y_secret_name} \
-  -n ${self.triggers_replace.o11y_secret_monitoring_namespace} \
-  --from-literal=accessToken="$TOKEN"
 EOT
   }
 
