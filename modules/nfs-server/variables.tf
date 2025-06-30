@@ -89,6 +89,13 @@ variable "nfs_disk_name_suffix" {
 # PUBLIC IP
 variable "public_ip" {
   type        = bool
-  default     = false
+  default     = true
   description = "attach a public ip to the vm if true"
 }
+
+
+variable "number_raid_disks" {
+  type        = number
+  description = "Number of disks being used in raid"
+  default     = 1
+ }
