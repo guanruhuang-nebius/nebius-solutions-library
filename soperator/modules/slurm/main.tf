@@ -283,6 +283,7 @@ resource "helm_release" "soperator_fluxcd_cm" {
       logs_collector    = var.resources_logs_collector
       events_collector  = var.resources_events_collector
       node_configurator = local.resources.node_configurator
+      slurm_operator    = local.resources.slurm_operator
       slurm_checks      = local.resources.slurm_checks
       dcgm_exporter     = local.resources.dcgm_exporter
     }

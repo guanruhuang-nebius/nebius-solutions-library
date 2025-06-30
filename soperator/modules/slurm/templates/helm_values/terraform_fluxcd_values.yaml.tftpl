@@ -714,7 +714,12 @@ resources:
           version: ${operator_version}
           values:
             manager:
-              resources: {}
+              resources:
+                requests:
+                  memory: ${resources.slurm_operator.requests.memory}Gi
+                  cpu: ${resources.slurm_operator.requests.cpu * 1000}m
+                limits:
+                  memory: ${resources.slurm_operator.limits.memory}Gi
           kruise:
             enabled: true
             interval: 5m
@@ -724,12 +729,14 @@ resources:
             interval: 5m
             timeout: 5m
             values:
-              resources:
-                requests:
-                  memory: ${resources.slurm_checks.requests.memory}Gi
-                  cpu: ${resources.slurm_checks.requests.cpu * 1000}m
-                limits:
-                  memory: ${resources.slurm_checks.limits.memory}Gi
+              checks:
+                manager:
+                  resources:
+                    requests:
+                      memory: ${resources.slurm_operator.requests.memory}Gi
+                      cpu: ${resources.slurm_operator.requests.cpu * 1000}m
+                    limits:
+                      memory: ${resources.slurm_operator.limits.memory}Gi
           nodeConfigurator:
             enabled: true
             interval: 5m
