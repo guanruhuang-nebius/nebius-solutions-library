@@ -15,7 +15,6 @@ locals {
 resource "helm_release" "dashboard" {
   for_each = tomap({
     cluster_health         = "cluster-health"
-    pod_metrics            = "pod-metrics"
     jobs_overview          = "jobs-overview"
     workers_overview       = "workers-overview"
     workers_detailed_stats = "workers-detailed-stats"
