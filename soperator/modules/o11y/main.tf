@@ -17,6 +17,8 @@ resource "terraform_data" "o11y_static_key_secret" {
     working_dir = path.root
     interpreter = ["/bin/bash", "-c"]
     command     = <<EOT
+set -e
+
 unset NEBIUS_IAM_TOKEN
 
 # Ensuring that profile exists
@@ -72,6 +74,8 @@ EOT
     working_dir = path.root
     interpreter = ["/bin/bash", "-c"]
     command     = <<EOT
+set -e  
+
 unset NEBIUS_IAM_TOKEN
 # Delete SA (group membership and static key will be deleted automatically)
 echo "Retrieving service account."
