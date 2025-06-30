@@ -725,6 +725,13 @@ resources:
             enabled: true
             interval: 5m
             timeout: 5m
+            overrideValues:
+              manager:
+                image:
+                  repository: cr.eu-north1.nebius.cloud/soperator/kruise-manager
+              helmHooks:
+                image:
+                  repository: cr.eu-north1.nebius.cloud/soperator/kruise-helm-hook
           soperatorChecks:
             enabled: true
             interval: 5m
