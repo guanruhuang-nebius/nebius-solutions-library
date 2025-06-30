@@ -223,6 +223,6 @@ jobs:
         ; do
           echo Deleting all $resource
           eval nebius --format json $resource list \
-          | jq -r 'try .items[] | .metadata.id' \
+          | jq -r 'try .items[] | select(.metadata.name!="terraform-test-reports") | .metadata.id' \
           | eval xargs -r -n 1 nebius $resource delete --id
         done
