@@ -337,3 +337,17 @@ resource "helm_release" "flux2_sync" {
     value = "true"
   }
 }
+
+resource "helm_release" "soperator_fluxcd_ad_hoc_cm" {
+  name       = "soperator-fluxcd"
+  repository = local.helm.repository.raw
+  chart      = local.helm.chart.raw
+  version    = local.helm.version.raw
+  namespace  = var.flux_namespace
+
+  values = [templatefile("${path.module}/templates/helm_values/soperator_fluxcd.yaml.tftpl", {})]
+
+  lifecycle {
+    ignore_changes = all
+  }
+}
