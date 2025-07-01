@@ -70,7 +70,7 @@ variable "mtu_size" {
 }
 
 variable "nfs_size" {
-  type        = string
+  type        = number
   description = "Size of the NFS in GB, should be divisbile by 93"
 }
 

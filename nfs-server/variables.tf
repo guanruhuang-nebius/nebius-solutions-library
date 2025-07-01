@@ -27,7 +27,7 @@ variable "cpu_nodes_preset" {
 
 variable "nfs_size" {
   type        = number
-  default     =  10 * 1024 * 1024 * 1024 # size should be a multiple of 99857989632
+  default     =  93 * 1024 * 1024 * 1024 # size should be a multiple of 99857989632
   description = "Size of the NFS in GB, should be divisbile by 93"
 }
 
@@ -58,6 +58,6 @@ variable "nfs_ip_range" {
 
 variable "number_raid_disks" {
   type        = number
-  description = "Number of disks being used in raid"
-  default     = 4
+  description = "Number of disks being used in raid 0"
+  default     = 1
  }
