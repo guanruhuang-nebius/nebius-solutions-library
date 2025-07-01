@@ -89,7 +89,7 @@ variable "nfs_disk_name_suffix" {
 # PUBLIC IP
 variable "public_ip" {
   type        = bool
-  default     = true
+  default     = false
   description = "attach a public ip to the vm if true"
 }
 
