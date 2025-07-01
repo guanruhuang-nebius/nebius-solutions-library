@@ -47,37 +47,31 @@ resource "terraform_data" "k8s_backups_bucket_access_secret" {
     when        = create
     working_dir = path.root
     interpreter = ["/bin/bash", "-c"]
-    command = join(
-      "",
-      [
-        "kubectl create namespace ${var.soperator_namespace} --context ${var.k8s_cluster_context} || true",
-        "AKID=$(nebius iam access-key create ",
-        "--parent-id ${var.iam_project_id} ",
-        "--account-service-account-id ${self.triggers_replace.service_account_id} | yq .resource_id); ",
-        "{ echo \"",
-        join(
-          "\"; echo \"",
-          [
-            "apiVersion: v1",
-            "kind: Secret",
-            "type: Opaque",
-            "metadata:",
-            "  name: ${local.secret_name}",
-            "  namespace: ${var.soperator_namespace}",
-            "  labels:",
-            "    app.kubernetes.io/managed-by: soperator-terraform",
-            "  annotations:",
-            "    slurm.nebius.ai/service-account: ${self.triggers_replace.service_account_id}",
-            "data:",
-            "  aws-access-key-id: $(nebius iam access-key get-by-id --id $AKID | yq .status.aws_access_key_id | tr -d '\n' | base64)",
-            "  aws-access-secret-key: $(nebius iam access-key get-secret-once --id $AKID | yq .secret | tr -d '\n' | base64)",
-            "  backup-password: $(echo -n ${var.backups_password} | base64)",
-            "\" ;",
-          ]
-        ),
-        " } | kubectl apply --server-side --context ${var.k8s_cluster_context} -f -"
-      ]
-    )
+    command     = <<EOT
+set -e
+
+kubectl create namespace ${var.soperator_namespace} --context ${var.k8s_cluster_context} || true
+
+AKID=$(nebius iam access-key create --parent-id ${var.iam_project_id} \
+  --account-service-account-id ${self.triggers_replace.service_account_id} | yq .resource_id)
+
+kubectl apply --server-side --context ${var.k8s_cluster_context} -f -  <<EOF
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: ${local.secret_name}
+  namespace: ${var.soperator_namespace}
+  labels:
+    app.kubernetes.io/managed-by: soperator-terraform
+  annotations:
+    slurm.nebius.ai/service-account: ${self.triggers_replace.service_account_id}
+data:
+  aws-access-key-id: $(nebius iam access-key get-by-id --id $AKID | yq .status.aws_access_key_id | tr -d '\n' | base64)
+  aws-access-secret-key: $(nebius iam access-key get-secret-once --id $AKID | yq .secret | tr -d '\n' | base64)
+  backup-password: $(echo -n ${var.backups_password} | base64)
+EOF
+EOT
   }
 }
 
