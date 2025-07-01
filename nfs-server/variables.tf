@@ -27,7 +27,7 @@ variable "cpu_nodes_preset" {
 
 variable "nfs_size" {
   type        = number
-  default     =  93 * 1024 * 1024 * 1024 # size should be a multiple of 99857989632
+  default     = 93 * 1024 * 1024 * 1024 # size should be a multiple of 99857989632
   description = "Size of the NFS in GB, should be divisbile by 93"
 }
 
@@ -61,3 +61,10 @@ variable "number_raid_disks" {
   description = "Number of disks being used in raid 0"
   default     = 1
  }
+
+# PUBLIC IP
+variable "public_ip" {
+  type        = bool
+  default     = false
+  description = "attach a public ip to the vm if true"
+}
