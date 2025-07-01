@@ -17,6 +17,8 @@ resource "terraform_data" "o11y_static_key_secret" {
     working_dir = path.root
     interpreter = ["/bin/bash", "-c"]
     command     = <<EOT
+set -e
+
 unset NEBIUS_IAM_TOKEN
 
 # Ensuring that profile exists
@@ -61,9 +63,6 @@ kubectl --context ${self.triggers_replace.k8s_cluster_context} create secret gen
   -n ${self.triggers_replace.o11y_secret_logs_namespace} \
   --from-literal=accessToken="$TOKEN"
 echo "Creating secret..."
-kubectl --context ${self.triggers_replace.k8s_cluster_context} create secret generic ${self.triggers_replace.o11y_secret_name} \
-  -n ${self.triggers_replace.o11y_secret_monitoring_namespace} \
-  --from-literal=accessToken="$TOKEN"
 EOT
   }
 
@@ -72,6 +71,8 @@ EOT
     working_dir = path.root
     interpreter = ["/bin/bash", "-c"]
     command     = <<EOT
+set -e  
+
 unset NEBIUS_IAM_TOKEN
 # Delete SA (group membership and static key will be deleted automatically)
 echo "Retrieving service account."

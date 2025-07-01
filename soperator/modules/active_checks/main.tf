@@ -156,3 +156,26 @@ resource "terraform_data" "wait_for_checks" {
     )
   }
 }
+
+resource "helm_release" "all_reduce_perf_nccl_check" {
+  count = var.checks.all_reduce_perf_nccl_check_enabled ? 1 : 0
+
+  depends_on = [
+    terraform_data.wait_for_checks
+  ]
+
+  name       = "all-reduce-perf-nccl-check"
+  repository = local.helm.repository.raw
+  chart      = local.helm.chart.raw
+  version    = local.helm.version.raw
+
+  create_namespace = true
+  namespace        = var.slurm_cluster_namespace
+
+  values = [templatefile("${path.module}/templates/all_reduce_perf_nccl_check.yaml.tftpl", {
+    slurm_cluster_namespace = var.slurm_cluster_namespace
+    slurm_cluster_name      = var.slurm_cluster_name
+  })]
+
+  wait = true
+}

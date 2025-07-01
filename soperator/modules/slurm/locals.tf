@@ -104,12 +104,21 @@ locals {
         cpu    = 0.5
       }
     }
-    slurm_checks = {
+    slurm_operator = {
       limits = {
-        memory = 1
+        memory = 2
       }
       requests = {
-        memory = 0.5
+        memory = 2
+        cpu    = 1
+      }
+    }
+    slurm_checks = {
+      limits = {
+        memory = 2
+      }
+      requests = {
+        memory = 2
         cpu    = 0.5
       }
     }

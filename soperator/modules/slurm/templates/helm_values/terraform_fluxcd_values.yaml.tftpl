@@ -35,6 +35,7 @@ resources:
           clusterName: ${cluster_name}
           publicEndpointEnabled: ${public_o11y_enabled}
           projectId: ${iam_project_id}
+          region: ${region}
           opentelemetry:
             enabled: ${telemetry_enabled}
             logs:
@@ -714,22 +715,36 @@ resources:
           version: ${operator_version}
           values:
             manager:
-              resources: {}
+              resources:
+                requests:
+                  memory: ${resources.slurm_operator.requests.memory}Gi
+                  cpu: ${resources.slurm_operator.requests.cpu * 1000}m
+                limits:
+                  memory: ${resources.slurm_operator.limits.memory}Gi
           kruise:
             enabled: true
             interval: 5m
             timeout: 5m
+            overrideValues:
+              manager:
+                image:
+                  repository: cr.eu-north1.nebius.cloud/soperator/kruise-manager
+              helmHooks:
+                image:
+                  repository: cr.eu-north1.nebius.cloud/soperator/kruise-helm-hook
           soperatorChecks:
             enabled: true
             interval: 5m
             timeout: 5m
             values:
-              resources:
-                requests:
-                  memory: ${resources.slurm_checks.requests.memory}Gi
-                  cpu: ${resources.slurm_checks.requests.cpu * 1000}m
-                limits:
-                  memory: ${resources.slurm_checks.limits.memory}Gi
+              checks:
+                manager:
+                  resources:
+                    requests:
+                      memory: ${resources.slurm_operator.requests.memory}Gi
+                      cpu: ${resources.slurm_operator.requests.cpu * 1000}m
+                    limits:
+                      memory: ${resources.slurm_operator.limits.memory}Gi
           nodeConfigurator:
             enabled: true
             interval: 5m

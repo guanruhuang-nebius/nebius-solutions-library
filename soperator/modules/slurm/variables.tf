@@ -178,7 +178,7 @@ variable "login_ssh_root_public_keys" {
 variable "exporter_enabled" {
   description = "Whether to enable Slurm metrics exporter."
   type        = bool
-  default     = true
+  default     = false
 }
 
 # endregion Exporter
@@ -484,7 +484,7 @@ variable "resources_vm_single" {
   default = {
     memory     = "24Gi"
     cpu        = "6000m"
-    size       = "80Gi"
+    size       = "512Gi"
     gomaxprocs = 6
   }
 }
@@ -656,3 +656,9 @@ variable "backups_enabled" {
   default     = false
 }
 
+
+variable "region" {
+  description = "Region where the Slurm cluster is deployed."
+  type        = string
+  default     = "eu-north1"
+}

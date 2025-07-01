@@ -131,6 +131,7 @@ resource "helm_release" "soperator_fluxcd_cm" {
 
     name                = var.name
     cluster_name        = var.cluster_name
+    region              = var.region
     public_o11y_enabled = var.public_o11y_enabled
     metrics_collector   = local.metrics_collector
     create_pvcs         = var.create_pvcs
@@ -283,6 +284,7 @@ resource "helm_release" "soperator_fluxcd_cm" {
       logs_collector    = var.resources_logs_collector
       events_collector  = var.resources_events_collector
       node_configurator = local.resources.node_configurator
+      slurm_operator    = local.resources.slurm_operator
       slurm_checks      = local.resources.slurm_checks
       dcgm_exporter     = local.resources.dcgm_exporter
     }
@@ -333,5 +335,19 @@ resource "helm_release" "flux2_sync" {
   set {
     name  = "kustomization.spec.prune"
     value = "true"
+  }
+}
+
+resource "helm_release" "soperator_fluxcd_ad_hoc_cm" {
+  name       = "soperator-fluxcd"
+  repository = local.helm.repository.raw
+  chart      = local.helm.chart.raw
+  version    = local.helm.version.raw
+  namespace  = var.flux_namespace
+
+  values = [templatefile("${path.module}/templates/helm_values/soperator_fluxcd.yaml.tftpl", {})]
+
+  lifecycle {
+    ignore_changes = all
   }
 }
