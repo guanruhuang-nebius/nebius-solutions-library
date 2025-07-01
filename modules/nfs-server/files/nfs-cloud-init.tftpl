@@ -15,42 +15,21 @@ users:
       - ${key}
 %{ endfor ~}
 
-%{ if number_raid_disks > 1 ~}
 disk_setup:
 %{ for i in range(number_raid_disks) ~}
   /dev/disk/by-id/virtio-nfs-disk-${i}:
     table_type: gpt
     layout: true
+    overwrite: true
+    partitions:
+      - number: 1
+        size: -1  # Use entire disk
+
 %{ endfor ~}
 
 fs_setup:
   - device: /dev/md0
     filesystem: ext4
-
-runcmd:
-  # Create RAID 0 array
-  #- mdadm --create --verbose /dev/md0 --level=0 --raid-devices=${number_raid_disks} ${join(" ", [for i in range(number_raid_disks) : "/dev/disk/by-id/virtio-nfs-disk-${i}-part1"])}
-  - mdadm --create --verbose /dev/md0 --level=0 --raid-devices=4 /dev/disk/by-id/virtio-nfs-disk-[0-3]-part1
-  - mkfs.ext4 /dev/md0
-  - mkdir -p ${nfs_path}
-  - mount /dev/md0 ${nfs_path}
-  - echo "/dev/md0 ${nfs_path} ext4 defaults,relatime,rw 0 0" >> /etc/fstab
-%{ else ~}
-disk_setup:
-  /dev/disk/by-id/virtio-nfs-disk-0:
-    table_type: gpt
-    layout: true
-
-fs_setup:
-  - device: /dev/disk/by-id/virtio-nfs-disk-0-part1
-    filesystem: ext4
-
-runcmd:
-  # Single disk setup
-  - mkdir -p ${nfs_path}
-  - mount /dev/disk/by-id/virtio-nfs-disk-0-part1 ${nfs_path}
-  - echo "/dev/disk/by-id/virtio-nfs-disk-0-part1 ${nfs_path} ext4 defaults,relatime,rw 0 0" >> /etc/fstab
-%{ endif ~}
 
 write_files:
   - path: /etc/exports
@@ -59,6 +38,13 @@ write_files:
     append: true
 
 runcmd:
+  # Create RAID 0 array
+  - mdadm --create --force --verbose /dev/md0 --level=0 --raid-devices=${number_raid_disks} /dev/disk/by-id/virtio-nfs-disk-[0-${number_raid_disks}]-part1
+  - mkfs.ext4 /dev/md0
+  - mkdir -p ${nfs_path}
+  - mount /dev/md0 ${nfs_path}
+  - echo "/dev/md0 ${nfs_path} ext4 defaults,relatime,rw 0 0" >> /etc/fstab
+
   # Configure permissions
   - chown nobody:nogroup ${nfs_path}
   - chmod 777 ${nfs_path}
@@ -70,7 +56,5 @@ runcmd:
   - systemctl restart nfs-kernel-server
 
   # Ensure mdadm config is saved
-%{ if number_raid_disks > 1 ~}
   - mdadm --detail --scan >> /etc/mdadm/mdadm.conf
   - update-initramfs -u
-%{ endif ~}
