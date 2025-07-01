@@ -33,3 +33,6 @@ resources:
                 prune:
                   schedule: "${prune_schedule}"
                   retention: ${jsonencode(merge(backups_retention, {"tags": ["soperator-jail-schedule"]}))}
+
+                podSecurityContext:
+                  runAsUser: 0
