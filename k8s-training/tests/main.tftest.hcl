@@ -1,7 +1,7 @@
 ###GLOBALVARIABLES OWERWITE BLOCK###
 variables {
   gpu_nodes_platform = "gpu-h100-sxm"
-  enable_loki = false # TODO: Disabling Loki since not possible to delete non-empty storage bucket
+  enable_loki        = false # TODO: Disabling Loki since not possible to delete non-empty storage bucket
 }
 ######
 run "k8s_training_apply" {
@@ -31,7 +31,7 @@ run "test_mode_k8s_training_apply" {
   command = apply
 
   variables {
-    test_mode   = true
+    test_mode = true
   }
 
   assert {
