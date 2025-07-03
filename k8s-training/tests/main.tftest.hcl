@@ -1,10 +1,8 @@
-###VARIABLES OWERWITE BLOCK###
-variables {
-  gpu_nodes_platform = "gpu-h100-sxm"
-}
-######
 run "k8s_training_apply" {
   command = apply
+  variables {
+    gpu_nodes_platform = "gpu-h100-sxm"
+  }
   plan_options {
     target = [
       nebius_mk8s_v1_cluster.k8s-cluster
@@ -14,6 +12,9 @@ run "k8s_training_apply" {
 
 run "k8s_node_groups_training_apply" {
   command = apply
+  variables {
+    gpu_nodes_platform = "gpu-h100-sxm"
+  }
   plan_options {
     target = [
       nebius_mk8s_v1_node_group.cpu-only,
@@ -27,6 +28,7 @@ run "full_training_apply" {
 
   variables {
     enable_loki = false # TODO: Disabling Loki since not possible to delete non-empty storage bucket
+    gpu_nodes_platform = "gpu-h100-sxm"
   }
 }
 
@@ -36,6 +38,7 @@ run "test_mode_k8s_training_apply" {
   variables {
     enable_loki = false # TODO: Disabling Loki since not possible to delete non-empty storage bucket
     test_mode   = true
+    gpu_nodes_platform = "gpu-h100-sxm"
   }
 
   assert {
