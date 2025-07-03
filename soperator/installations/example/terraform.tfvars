@@ -160,7 +160,7 @@ nfs = {
 
 # Version of soperator.
 # ---
-slurm_operator_version = "1.21.1"
+slurm_operator_version = "1.21.2"
 
 # Is the version of soperator stable or not.
 # ---
@@ -340,7 +340,7 @@ slurm_login_ssh_root_public_keys = [
 # Whether to enable Slurm metrics exporter.
 # By default, true.
 # ---
-slurm_exporter_enabled = false
+slurm_exporter_enabled = true
 
 # endregion Exporter
 

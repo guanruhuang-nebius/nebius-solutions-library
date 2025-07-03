@@ -19,6 +19,7 @@ resource "terraform_data" "o11y_static_key_secret" {
     command     = <<EOT
 set -e
 
+NEBIUS_IAM_TOKEN_BKP=$NEBIUS_IAM_TOKEN
 unset NEBIUS_IAM_TOKEN
 
 # Ensuring that profile exists
@@ -43,6 +44,8 @@ TOKEN=$(nebius --profile ${self.triggers_replace.o11y_profile} iam static-key is
   --account-service-account-id "$SA" \
   --service observability \
   --name ${self.triggers_replace.service_account_name} | yq .token)
+
+export NEBIUS_IAM_TOKEN=$NEBIUS_IAM_TOKEN_BKP
 
 echo "Applying namespace..."
 cat <<EOF | kubectl --context "${self.triggers_replace.k8s_cluster_context}" apply -f -
