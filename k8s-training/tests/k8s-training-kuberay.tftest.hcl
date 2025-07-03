@@ -1,8 +1,8 @@
 ###GLOBAL VARIABLES OWERWITE BLOCK###
 variables {
   gpu_nodes_platform = "gpu-h100-sxm"
-  enable_loki       = false # TODO: Disabling Loki since not possible to delete non-empty storage bucket
-  etcd_cluster_size = 1
+  enable_loki        = false # TODO: Disabling Loki since not possible to delete non-empty storage bucket
+  etcd_cluster_size  = 1
 }
 ######
 run "k8s_training_kuberay_apply" {
@@ -28,6 +28,6 @@ run "full_training_kuberay_apply" {
   command = apply
 
   variables {
-    enable_kuberay    = true
+    enable_kuberay = true
   }
 }
