@@ -745,7 +745,7 @@ variable "slurm_login_ssh_root_public_keys" {
 variable "slurm_exporter_enabled" {
   description = "Whether to enable Slurm metrics exporter."
   type        = bool
-  default     = false
+  default     = true
 }
 
 # endregion Exporter
