@@ -1,3 +1,8 @@
+###GLOBAL VARIABLES OWERWITE BLOCK###
+variables {
+  gpu_nodes_platform = "gpu-h100-sxm"
+}
+######
 run "k8s_training_kuberay_apply" {
   command = apply
   plan_options {
