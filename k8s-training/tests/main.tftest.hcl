@@ -1,6 +1,7 @@
-###VARIABLES OWERWITE BLOCK###
+###GLOBALVARIABLES OWERWITE BLOCK###
 variables {
   gpu_nodes_platform = "gpu-h100-sxm"
+  enable_loki = false # TODO: Disabling Loki since not possible to delete non-empty storage bucket
 }
 ######
 run "k8s_training_apply" {
@@ -24,17 +25,12 @@ run "k8s_node_groups_training_apply" {
 
 run "full_training_apply" {
   command = apply
-
-  variables {
-    enable_loki = false # TODO: Disabling Loki since not possible to delete non-empty storage bucket
-  }
 }
 
 run "test_mode_k8s_training_apply" {
   command = apply
 
   variables {
-    enable_loki = false # TODO: Disabling Loki since not possible to delete non-empty storage bucket
     test_mode   = true
   }
 
