@@ -55,12 +55,16 @@ resource "nebius_mk8s_v1_node_group" "worker" {
 
   fixed_node_count = var.node_group_workers[count.index].size
   strategy = {
-    max_unavailable = {
-      percent = var.node_group_workers[count.index].max_unavailable_percent
-    }
-    max_surge = {
-      percent = var.node_group_workers[count.index].max_surge_percent
-    }
+    max_unavailable = (
+      var.node_group_workers[count.index].max_unavailable_percent != null ?
+      { percent = var.node_group_workers[count.index].max_unavailable_percent } :
+      null
+    )
+    max_surge = (
+      var.node_group_workers[count.index].max_surge_percent != null ?
+      { percent = var.node_group_workers[count.index].max_surge_percent } :
+      null
+    )
     drain_timeout = var.node_group_workers[count.index].drain_timeout
   }
 
