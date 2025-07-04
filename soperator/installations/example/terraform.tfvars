@@ -160,7 +160,7 @@ nfs = {
 
 # Version of soperator.
 # ---
-slurm_operator_version = "1.21.2"
+slurm_operator_version = "1.21.3"
 
 # Is the version of soperator stable or not.
 # ---
@@ -274,6 +274,8 @@ slurm_nodeset_workers = [{
   size                    = 16
   nodes_per_nodegroup     = 4
   max_unavailable_percent = 50
+  # max_surge_percent       = 50
+  # drain_timeout           = "10s"
   resource = {
     platform = "gpu-h100-sxm"
     preset   = "8gpu-128vcpu-1600gb"

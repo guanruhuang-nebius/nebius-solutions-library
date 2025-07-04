@@ -570,7 +570,9 @@ variable "slurm_nodeset_workers" {
   type = list(object({
     size                    = number
     nodes_per_nodegroup     = number
-    max_unavailable_percent = number
+    max_unavailable_percent = optional(number)
+    max_surge_percent       = optional(number)
+    drain_timeout           = optional(string)
     resource = object({
       platform = string
       preset   = string
