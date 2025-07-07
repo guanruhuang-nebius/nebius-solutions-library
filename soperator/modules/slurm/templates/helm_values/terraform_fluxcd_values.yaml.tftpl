@@ -51,6 +51,15 @@ resources:
                     cpu: ${resources.logs_collector.cpu}
                   limits:
                     memory: ${resources.logs_collector.memory}
+                jailLogs:
+                  enabled: true
+                  resources:
+                    requests:
+                      memory: ${resources.jail_logs_collector.memory}
+                      cpu: ${resources.jail_logs_collector.cpu}
+                    limits:
+                      memory: ${resources.jail_logs_collector.memory}
+
             events:
               %{~ if opentelemetry_collector_version != "" ~}
               version: ${opentelemetry_collector_version}
