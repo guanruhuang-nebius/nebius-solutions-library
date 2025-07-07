@@ -278,15 +278,16 @@ resource "helm_release" "soperator_fluxcd_cm" {
     }
 
     resources = {
-      vm_single         = var.resources_vm_single
-      vm_agent          = var.resources_vm_agent
-      vm_logs           = var.resources_vm_logs_server
-      logs_collector    = var.resources_logs_collector
-      events_collector  = var.resources_events_collector
-      node_configurator = local.resources.node_configurator
-      slurm_operator    = local.resources.slurm_operator
-      slurm_checks      = local.resources.slurm_checks
-      dcgm_exporter     = local.resources.dcgm_exporter
+      vm_single           = var.resources_vm_single
+      vm_agent            = var.resources_vm_agent
+      vm_logs             = var.resources_vm_logs_server
+      logs_collector      = var.resources_logs_collector
+      jail_logs_collector = var.resources_jail_logs_collector
+      events_collector    = var.resources_events_collector
+      node_configurator   = local.resources.node_configurator
+      slurm_operator      = local.resources.slurm_operator
+      slurm_checks        = local.resources.slurm_checks
+      dcgm_exporter       = local.resources.dcgm_exporter
     }
 
   })]
