@@ -523,6 +523,17 @@ variable "resources_logs_collector" {
   }
 }
 
+variable "resources_jail_logs_collector" {
+  type = object({
+    memory = string
+    cpu    = string
+  })
+  default = {
+    memory = "1Gi"
+    cpu    = "1000m"
+  }
+}
+
 # endregion Monitoring
 
 # region SConfigController
