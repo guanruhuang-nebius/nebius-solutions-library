@@ -86,8 +86,8 @@ locals {
       ephemeral_storage = 0.5
     }
     rest = {
-      cpu               = 1
-      memory            = 1
+      cpu               = 2
+      memory            = 8
       ephemeral_storage = 0.5
     }
     mariadb = {
