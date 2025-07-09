@@ -106,7 +106,7 @@ resources:
                       memory: ${resources.vm_agent.memory}
                   %{~ if public_o11y_enabled ~}
                   remoteWriteSettings:
-                    queues: 2
+                    queues: ${vm_agent_queue_count}
                   %{~ endif ~}
               vmsingle:
                 spec:
