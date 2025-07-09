@@ -632,6 +632,7 @@ resources:
               rest:
                 enabled: ${slurm_cluster.nodes.rest.enabled}
                 k8sNodeFilterName: ${slurm_cluster.k8s_node_filters.system.name}
+                size: 2
                 rest:
                   resources:
                     cpu: ${slurm_cluster.nodes.rest.resources.cpu * 1000}m
