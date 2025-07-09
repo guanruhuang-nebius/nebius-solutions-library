@@ -7,7 +7,7 @@ resources:
     spec:
       name: all-reduce-perf-nccl
       checkType: slurmJob
-      suspend: false
+      suspend: true
       reactions:
         drainSlurmNode: true
         setCondition: true
