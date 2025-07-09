@@ -86,8 +86,8 @@ locals {
       ephemeral_storage = 0.5
     }
     rest = {
-      cpu               = 1
-      memory            = 1
+      cpu               = 2
+      memory            = 8
       ephemeral_storage = 0.5
     }
     mariadb = {
@@ -133,4 +133,8 @@ locals {
   }
 
   slurm_node_extra = "\\\"{ \\\\\\\"monitoring\\\\\\\": \\\\\\\"https://console.eu.nebius.com/${var.iam_project_id}/compute/instances/$INSTANCE_ID/monitoring\\\\\\\" }\\\""
+
+  # Calculate vmagent remote write queue count based on cluster size
+  # This sets metrics ingestion capacity for larger clusters properly
+  vm_agent_queue_count = 2 + floor(sum(var.node_count.worker) / 80)
 }

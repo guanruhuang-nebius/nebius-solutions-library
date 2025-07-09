@@ -290,6 +290,8 @@ resource "helm_release" "soperator_fluxcd_cm" {
       dcgm_exporter       = local.resources.dcgm_exporter
     }
 
+    vm_agent_queue_count = local.vm_agent_queue_count
+
   })]
 }
 

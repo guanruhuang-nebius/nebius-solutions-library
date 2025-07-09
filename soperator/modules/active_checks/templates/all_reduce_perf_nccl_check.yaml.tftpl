@@ -7,11 +7,11 @@ resources:
     spec:
       name: all-reduce-perf-nccl
       checkType: slurmJob
-      suspend: false
+      suspend: true
       reactions:
         drainSlurmNode: true
         setCondition: true
-      runAfterCreation: false
+      runAfterCreation: true
       schedule: 0 */8 * * *
       slurmClusterRefName: ${slurm_cluster_name}
       slurmJobSpec:
