@@ -911,6 +911,11 @@ variable "backups_retention" {
   type        = map(any)
 }
 
+variable "cleanup_bucket_on_destroy" {
+  description = "Whether to delete on destroy all backup data from bucket or not"
+  type        = bool
+}
+
 # endregion Backups
 
 # region Apparmor
