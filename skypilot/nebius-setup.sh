@@ -205,11 +205,11 @@ if [[ "$SETUP_STORAGE" =~ ^[Yy]$ ]]; then
       --description "AWS CLI - $REGION region" \
       --format json | jq -r '.metadata.id')
     
-    ACCESS_KEY_AWS_ID=$(nebius iam v2 access-key get-by-id \
+    ACCESS_KEY_AWS_ID=$(nebius iam v2 access-key get \
       --id "$ACCESS_KEY_ID" \
       --format json | jq -r '.status.aws_access_key_id')
     
-    SECRET_ACCESS_KEY=$(nebius iam v2 access-key get-secret-once \
+    SECRET_ACCESS_KEY=$(nebius iam v2 access-key get \
       --id "$ACCESS_KEY_ID" --format json \
       | jq -r '.status.secret')
     

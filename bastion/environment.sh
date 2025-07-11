@@ -105,10 +105,10 @@ NEBIUS_SA_ACCESS_KEY_ID=$(nebius iam v2 access-key create \
 echo "Created new access key: ${NEBIUS_SA_ACCESS_KEY_ID}"
 
 # AWS-compatible access key
-export AWS_ACCESS_KEY_ID=$(nebius iam v2 access-key get-by-id \
+export AWS_ACCESS_KEY_ID=$(nebius iam v2 access-key get \
   --id "${NEBIUS_SA_ACCESS_KEY_ID}" \
   --format json | jq -r '.status.aws_access_key_id')
-export AWS_SECRET_ACCESS_KEY=$(nebius iam v2 access-key get-secret-once \
+export AWS_SECRET_ACCESS_KEY=$(nebius iam v2 access-key get \
   --id "${NEBIUS_SA_ACCESS_KEY_ID}" \
   --format json \
   | jq -r '.status.secret')
