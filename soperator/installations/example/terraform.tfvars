@@ -467,6 +467,9 @@ backups_retention = {
   keepDaily = 7
 }
 
+# Whether to delete on destroy all backup data from bucket or not.
+cleanup_bucket_on_destroy = false
+
 # endregion Backups
 
 #----------------------------------------------------------------------------------------------------------------------#
