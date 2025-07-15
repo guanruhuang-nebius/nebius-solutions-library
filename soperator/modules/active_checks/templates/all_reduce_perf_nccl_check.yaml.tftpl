@@ -12,7 +12,7 @@ resources:
         drainSlurmNode: true
         setCondition: true
       runAfterCreation: true
-      schedule: 0 */8 * * *
+      schedule: 0 4,12,20 * * * # 3 times a day at 4:00, 12:00, and 20:00 UTC
       slurmClusterRefName: ${slurm_cluster_name}
       slurmJobSpec:
         eachWorkerJobArray: true
@@ -44,7 +44,6 @@ resources:
           #SBATCH --mem=32G
           #SBATCH --gpus-per-node=8
           #SBATCH --cpus-per-task=16
-          #SBATCH --no-requeue
 
           echo "Checking for running GPU processes..."
 
