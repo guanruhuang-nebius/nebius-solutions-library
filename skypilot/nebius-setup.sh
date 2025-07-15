@@ -199,19 +199,19 @@ if [[ "$SETUP_STORAGE" =~ ^[Yy]$ ]]; then
     
     # Create a unique access key for this region
     echo "   Creating access key for region $REGION..."
-    ACCESS_KEY_ID=$(nebius iam access-key create \
+    ACCESS_KEY_ID=$(nebius iam v2 access-key create \
       --parent-id "$PROJECT_ID" \
       --account-service-account-id "$SA_ID" \
       --description "AWS CLI - $REGION region" \
-      --format json | jq -r '.resource_id')
+      --format json | jq -r '.metadata.id')
     
-    ACCESS_KEY_AWS_ID=$(nebius iam access-key get-by-id \
+    ACCESS_KEY_AWS_ID=$(nebius iam v2 access-key get \
       --id "$ACCESS_KEY_ID" \
       --format json | jq -r '.status.aws_access_key_id')
     
-    SECRET_ACCESS_KEY=$(nebius iam access-key get-secret-once \
+    SECRET_ACCESS_KEY=$(nebius iam v2 access-key get \
       --id "$ACCESS_KEY_ID" --format json \
-      | jq -r '.secret')
+      | jq -r '.status.secret')
     
     # Configure AWS CLI for this region
     aws configure set aws_access_key_id "$ACCESS_KEY_AWS_ID" --profile "$PROFILE_NAME"
@@ -230,19 +230,19 @@ if [[ "$SETUP_STORAGE" =~ ^[Yy]$ ]]; then
     
     # Create a new access key for the default profile
     echo "   Creating access key for default nebius profile..."
-    DEFAULT_ACCESS_KEY_ID=$(nebius iam access-key create \
+    DEFAULT_ACCESS_KEY_ID=$(nebius iam v2 access-key create \
       --parent-id "$PROJECT_ID" \
       --account-service-account-id "$SA_ID" \
       --description "AWS CLI - Default nebius profile" \
-      --format json | jq -r '.resource_id')
+      --format json | jq -r '.metadata.id')
     
-    DEFAULT_ACCESS_KEY_AWS_ID=$(nebius iam access-key get-by-id \
+    DEFAULT_ACCESS_KEY_AWS_ID=$(nebius iam v2 access-key get \
       --id "$DEFAULT_ACCESS_KEY_ID" \
       --format json | jq -r '.status.aws_access_key_id')
     
-    DEFAULT_SECRET_ACCESS_KEY=$(nebius iam access-key get-secret-once \
+    DEFAULT_SECRET_ACCESS_KEY=$(nebius iam v2 access-key get \
       --id "$DEFAULT_ACCESS_KEY_ID" --format json \
-      | jq -r '.secret')
+      | jq -r '.status.secret')
     
     # Configure the generic profile
     aws configure set aws_access_key_id "$DEFAULT_ACCESS_KEY_AWS_ID" --profile nebius
