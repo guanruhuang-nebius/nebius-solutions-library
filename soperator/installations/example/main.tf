@@ -457,6 +457,8 @@ module "backups_store" {
   iam_project_id = var.iam_project_id
   instance_name  = local.k8s_cluster_name
 
+  cleanup_bucket_on_destroy = var.cleanup_bucket_on_destroy
+
   depends_on = [
     module.k8s,
     module.fluxcd,

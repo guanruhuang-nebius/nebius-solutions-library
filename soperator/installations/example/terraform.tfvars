@@ -160,7 +160,7 @@ nfs = {
 
 # Version of soperator.
 # ---
-slurm_operator_version = "1.21.8"
+slurm_operator_version = "1.21.9"
 
 # Is the version of soperator stable or not.
 # ---
@@ -466,6 +466,9 @@ backups_retention = {
   # ---
   keepDaily = 7
 }
+
+# Whether to delete on destroy all backup data from bucket or not.
+cleanup_bucket_on_destroy = false
 
 # endregion Backups
 
