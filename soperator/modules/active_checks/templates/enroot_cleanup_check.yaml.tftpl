@@ -7,12 +7,12 @@ resources:
     spec:
       name: enroot-cleanup
       checkType: slurmJob
-      suspend: true
+      suspend: false
       reactions:
         drainSlurmNode: false
         setCondition: false
       runAfterCreation: false
-      schedule: 0 0 * * *
+      schedule: 0 8 * * * # Once a day at 8:00 UTC
       slurmClusterRefName: ${slurm_cluster_name}
       slurmJobSpec:
         eachWorkerJobArray: true
