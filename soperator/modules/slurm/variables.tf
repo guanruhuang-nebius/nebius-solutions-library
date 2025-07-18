@@ -288,44 +288,6 @@ variable "shared_memory_size_gibibytes" {
 
 # endregion Config
 
-# region NCCLSettings
-
-variable "nccl_topology_type" {
-  description = "NCCL topology type."
-  type        = string
-  default     = "auto"
-}
-
-# endregion NCCLSettings
-
-# region NCCLBenchmark
-
-variable "nccl_benchmark_enable" {
-  description = "Whether to enable NCCL benchmark CronJob to benchmark GPU performance. It won't take effect in case of 1-GPU hosts."
-  type        = bool
-  default     = false
-}
-
-variable "nccl_benchmark_schedule" {
-  description = "NCCL benchmark's CronJob schedule."
-  type        = string
-  default     = "0 */3 * * *"
-}
-
-variable "nccl_benchmark_min_threshold" {
-  description = "Minimal threshold of NCCL benchmark for GPU performance to be considered as acceptable."
-  type        = number
-  default     = 45
-}
-
-variable "nccl_use_infiniband" {
-  description = "Use infiniband defines using NCCL_P2P_DISABLE=1 NCCL_SHM_DISABLE=1 NCCL_ALGO=Ring env variables for test."
-  type        = bool
-  default     = true
-}
-
-# endregion NCCLBenchmark
-
 # region Telemetry
 
 variable "telemetry_enabled" {

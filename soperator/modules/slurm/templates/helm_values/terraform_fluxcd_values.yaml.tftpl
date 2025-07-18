@@ -356,18 +356,6 @@ resources:
             populateJail:
               k8sNodeFilterName: ${slurm_cluster.k8s_node_filters.system.name}
 
-            ncclSettings:
-              topologyType: "${slurm_cluster.nccl_topology_type}"
-
-            periodicChecks:
-              ncclBenchmark:
-                enabled: ${slurm_cluster.nccl_benchmark.enable}
-                k8sNodeFilterName: ${slurm_cluster.k8s_node_filters.controller.name}
-                schedule: "${slurm_cluster.nccl_benchmark.schedule}"
-                ncclArguments:
-                  thresholdMoreThan: ${slurm_cluster.nccl_benchmark.min_threshold}
-                  useInfiniband: ${slurm_cluster.nccl_benchmark.use_infiniband}
-
             slurmConfig:
               defMemPerNode: ${floor(slurm_cluster.nodes.worker.resources.memory * 1024)}
 

@@ -420,12 +420,6 @@ module "slurm" {
 
   shared_memory_size_gibibytes = var.slurm_shared_memory_size_gibibytes
 
-  nccl_topology_type           = "auto"
-  nccl_benchmark_enable        = var.nccl_benchmark_enable
-  nccl_benchmark_schedule      = var.nccl_benchmark_schedule
-  nccl_benchmark_min_threshold = var.nccl_benchmark_min_threshold
-  nccl_use_infiniband          = var.nccl_use_infiniband
-
   telemetry_enabled = var.telemetry_enabled
 
   providers = {
