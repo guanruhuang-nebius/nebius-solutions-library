@@ -405,6 +405,12 @@ variable "public_o11y_enabled" {
   default     = true
 }
 
+variable "o11y_iam_project_id" {
+  description = "Project ID for public o11y."
+  type        = string
+  default     = ""
+}
+
 variable "create_pvcs" {
   description = "Whether to create PVCs. Uses emptyDir if false."
   type        = bool

@@ -21,14 +21,8 @@ variable "o11y_iam_tenant_id" {
   nullable    = false
 }
 
-variable "o11y_iam_project_id" {
-  description = "Project id for o11y."
-  type        = string
-  nullable    = false
-}
-
-variable "o11y_iam_group_id" {
-  description = "Group id for o11y."
+variable "iam_project_id" {
+  description = "ID of the IAM project of slurm cluster (not o11y)."
   type        = string
   nullable    = false
 }
