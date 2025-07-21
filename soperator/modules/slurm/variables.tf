@@ -457,8 +457,8 @@ variable "resources_vm_agent" {
     cpu    = string
   })
   default = {
-    memory = "4Gi"
-    cpu    = "2000m"
+    memory = "10Gi"
+    cpu    = "5000m"
   }
 }
 

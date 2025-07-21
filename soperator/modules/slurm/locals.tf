@@ -136,5 +136,5 @@ locals {
 
   # Calculate vmagent remote write queue count based on cluster size
   # This sets metrics ingestion capacity for larger clusters properly
-  vm_agent_queue_count = 2 + floor(sum(var.node_count.worker) / 80)
+  vm_agent_queue_count = 2 + floor(sum(var.node_count.worker) / 60)
 }
