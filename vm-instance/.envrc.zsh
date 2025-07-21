@@ -175,7 +175,7 @@ if [[ "$1" == "destroy" ]]; then
 fi
 
 # Region setup
-NEBIUS_REGION=$(nebius iam project get --id "$project_id" | awk '/region:/ {print $2}')
+NEBIUS_REGION=$(nebius iam project get --id "$project_id" --format json | jq -r '.spec.region')
 export NEBIUS_REGION
 
 # VPC subnet
@@ -312,6 +312,7 @@ else
   echo "Using existing bucket: ${NEBIUS_BUCKET_NAME}"
 fi
 
+export AWS_CONFIG_FILE="./.aws/config"
 aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
 aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
 aws configure set region $NEBIUS_REGION
