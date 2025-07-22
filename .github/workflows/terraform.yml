@@ -24,7 +24,7 @@ jobs:
   detect-changes:
     runs-on: ubuntu-latest
     outputs:
-      solutions: ${{ steps.build-matrix.outputs.solutions }}
+      solutions: ${{ steps.parse-changed-files.outputs.solutions }}
     steps:
       - name: Check out code
         uses: actions/checkout@v4
