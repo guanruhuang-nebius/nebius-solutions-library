@@ -53,8 +53,8 @@ jobs:
             fi
           done
           unique=$(echo "${matched[@]}" | tr ' ' '\n' | uniq);
-          json=$(printf '%s\n' "${unique[@]}" | jq -R . | jq -s .)
-          echo "solutions=${json}" >> $GITHUB_OUTPUT
+          json=$(printf '%s\n' "${unique[@]}" | jq -R . | jq -s -c .)
+          echo "solutions=$json" >> $GITHUB_OUTPUT
     
   terraform:
     needs: detect-changes
