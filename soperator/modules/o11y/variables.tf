@@ -1,9 +1,3 @@
-variable "region" {
-  description = "Region of the project."
-  type        = string
-  nullable    = false
-}
-
 variable "company_name" {
   description = "Name of the company."
   type        = string
@@ -48,4 +42,10 @@ variable "o11y_profile" {
   description = "Profile for nebius CLI for o11y."
   type        = string
   nullable    = false
+}
+
+variable "opentelemetry_collector_cm" {
+  description = "Configmap name for opentelemetry collector values"
+  type        = string
+  default     = "terraform-opentelemetry-collector"
 }

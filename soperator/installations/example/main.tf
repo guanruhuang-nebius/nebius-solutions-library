@@ -261,6 +261,7 @@ module "o11y" {
 
   depends_on = [
     module.k8s,
+    module.fluxcd,
   ]
 
   source = "../../modules/o11y"
@@ -269,7 +270,6 @@ module "o11y" {
   o11y_iam_tenant_id  = var.o11y_iam_tenant_id
   o11y_profile        = var.o11y_profile
   k8s_cluster_context = module.k8s.cluster_context
-  region              = var.region
   company_name        = var.company_name
 }
 
@@ -292,7 +292,6 @@ module "slurm" {
   maintenance                  = var.maintenance
   use_default_apparmor_profile = var.use_default_apparmor_profile
   public_o11y_enabled          = var.public_o11y_enabled
-  o11y_iam_project_id          = var.public_o11y_enabled ? module.o11y[0].o11y_project_id : ""
   slurm_partition_config_type  = var.slurm_partition_config_type
   slurm_partition_raw_config   = var.slurm_partition_raw_config
   slurm_worker_features        = var.slurm_worker_features

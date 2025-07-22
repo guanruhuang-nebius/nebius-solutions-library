@@ -4,7 +4,6 @@ locals {
     [
       var.company_name,
       var.iam_project_id,
-      var.region,
     ]
   )
 }
