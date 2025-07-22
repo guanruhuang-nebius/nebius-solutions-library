@@ -34,9 +34,9 @@ jobs:
         uses: tj-actions/changed-files@v46.0.5
         with:
           files_ignore_yaml:
-          - '.github/**'
-          - '.assets/**'
-          - 'docs/**'
+            - '.github/**'
+            - '.assets/**'
+            - 'docs/**'
 
       - name: Match changed files
         id: parse-changed-files
@@ -52,8 +52,9 @@ jobs:
                 matched+=("$solution")
             fi
           done
-          dedup=$(echo "${matched[@]}" | tr ' ' '\n' | uniq);
-          echo "solutions=${{ toJson(split($dedup, ' ')) }}" >> $GITHUB_OUTPUT
+          unique=$(echo "${matched[@]}" | tr ' ' '\n' | uniq);
+          json=$(printf '%s\n' "${unique[@]}" | jq -R . | jq -s .)
+          echo "solutions=${json}" >> $GITHUB_OUTPUT
     
   terraform:
     needs: detect-changes
