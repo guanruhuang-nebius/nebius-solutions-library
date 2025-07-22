@@ -21,24 +21,55 @@ env:
   TF_VAR_tenant_id: tenant-e00f3wdfzwfjgbcyfv
 
 jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      solutions: ${{ steps.build-matrix.outputs.solutions }}
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: List changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v46.0.5
+        with:
+          files_ignore_yaml:
+          - '.github/**'
+          - '.assets/**'
+          - 'docs/**'
+
+      - name: Match changed files
+        id: parse-changed-files
+        env:
+          ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
+        run: |
+          pattern='^(k8s-training|wireguard|bastion|dsvm)$'
+          matched=()
+
+          for file in ${ALL_CHANGED_FILES[@]}; do
+            solution=$(echo "$file" | cut -d "/" -f1)
+            if [[ $solution =~ $pattern ]]; then
+                matched+=("$solution")
+            fi
+          done
+          dedup=$(echo "${matched[@]}" | tr ' ' '\n' | uniq);
+          echo "solutions=${{ toJson(split($dedup, ' ')) }}" >> $GITHUB_OUTPUT
+    
   terraform:
-    name: 'Terraform ${{ matrix.solution.name }}'
+    needs: detect-changes
+    name: 'Terraform ${{ matrix.solution }}'
     environment:
       name: project-e00pjzzrtk1fs3yavy
     runs-on: ubuntu-latest
     strategy:
-      max-parallel: 1
+      max-parallel: 4
       matrix:
-        solution:
-          - name: k8s-training
-          - name: wireguard
-          - name: dsvm
-          - name: bastion
+        solution: ${{ fromJson(needs.detect-changes.outputs.solutions) }}
 
     defaults:
       run:
         shell: bash
-        working-directory: ${{ matrix.solution.name }}
+        working-directory: ${{ matrix.solution }}
 
     env:
       TF_VAR_subnet_id: vpcsubnet-e00dgdntmhgkeej1z3
@@ -148,8 +179,8 @@ jobs:
       with:
         gh_pages: gh-pages
         keep_reports: 100
-        subfolder: ${{ matrix.solution.name }}
-        allure_results: ${{ matrix.solution.name }}/tests/reports
+        subfolder: ${{ matrix.solution }}
+        allure_results: ${{ matrix.solution }}/tests/reports
 
     - name: Publish test report
       uses: peaceiris/actions-gh-pages@v4
