@@ -140,7 +140,7 @@ set -e
 unset NEBIUS_IAM_TOKEN
 export NEBIUS_IAM_TOKEN=$(nebius --profile ${self.triggers_replace.o11y_profile} iam get-access-token)
 
-output=$(nebius iam project get-by-name --name "${self.triggers_replace.o11y_resources_name}" --parent-id "${self.triggers_replace.o11y_iam_tenant_id} --format json")
+output=$(nebius iam project get-by-name --name "${self.triggers_replace.o11y_resources_name}" --parent-id "${self.triggers_replace.o11y_iam_tenant_id}" --format json)
 status=$?
 if [ $status -ne 0 ]; then
     echo "Failed to get project"
@@ -155,7 +155,7 @@ if [ ! -z "$SA" ] && [ "$SA" != "null" ]; then
   nebius iam service-account delete --id "$SA"
 fi
 
-GROUP=$(nebius iam group get-by-name --name "${self.triggers_replace.o11y_resources_name}" --parent-id ${self.triggers_replace.o11y_iam_tenant_id} --format json | jq -r .metadata.id)
+GROUP=$(nebius iam group get-by-name --name "${self.triggers_replace.o11y_resources_name}" --parent-id "${self.triggers_replace.o11y_iam_tenant_id}" --format json | jq -r .metadata.id)
 if [ ! -z "$GROUP" ] && [ "$GROUP" != "null" ]; then
   nebius iam group delete --id "$GROUP"
 fi
