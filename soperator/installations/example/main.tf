@@ -261,16 +261,15 @@ module "o11y" {
 
   depends_on = [
     module.k8s,
+    module.fluxcd,
   ]
 
   source = "../../modules/o11y"
 
-  o11y_iam_group_id   = var.o11y_iam_group_id
-  o11y_iam_project_id = var.o11y_iam_project_id
+  iam_project_id      = var.iam_project_id
   o11y_iam_tenant_id  = var.o11y_iam_tenant_id
   o11y_profile        = var.o11y_profile
   k8s_cluster_context = module.k8s.cluster_context
-  region              = var.region
   company_name        = var.company_name
 }
 

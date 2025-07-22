@@ -50,17 +50,6 @@ data "nebius_iam_v1_tenant" "this" {
   id = var.iam_tenant_id
 }
 
-variable "o11y_iam_project_id" {
-  description = "ID of the IAM project for O11y."
-  type        = string
-  nullable    = false
-
-  validation {
-    condition     = startswith(var.o11y_iam_project_id, "project-")
-    error_message = "ID of the IAM project must start with `project-`."
-  }
-}
-
 variable "o11y_iam_tenant_id" {
   description = "ID of the IAM tenant for O11y."
   type        = string
@@ -69,17 +58,6 @@ variable "o11y_iam_tenant_id" {
   validation {
     condition     = startswith(var.o11y_iam_tenant_id, "tenant-")
     error_message = "ID of the IAM tenant must start with `tenant-`."
-  }
-}
-
-variable "o11y_iam_group_id" {
-  description = "ID of the IAM group for O11y."
-  type        = string
-  nullable    = false
-
-  validation {
-    condition     = startswith(var.o11y_iam_group_id, "group-")
-    error_message = "ID of the IAM group must start with `group-`."
   }
 }
 
