@@ -4,9 +4,10 @@ on:
   push:
     branches:
       - main
+      - soperator-release-*
     paths:
-      - "soperator/**"
-      - ".github/workflows/soperator.yml"
+      - "soperator/VERSION"
+      - "soperator/SUBVERSION"
 
 permissions:
   contents: read
