@@ -32,6 +32,12 @@ variable "etcd_cluster_size" {
   default     = 3
 }
 
+variable "enable_egress_gateway" {
+  description = "Enable Cilium Egress Gateway."
+  type        = bool
+  default     = false
+}
+
 # K8s filestore
 variable "enable_filestore" {
   description = "Use Filestore."
