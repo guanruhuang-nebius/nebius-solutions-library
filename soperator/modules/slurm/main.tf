@@ -184,14 +184,6 @@ resource "helm_release" "soperator_fluxcd_cm" {
 
       nfs = var.nfs
 
-      nccl_topology_type = var.nccl_topology_type
-      nccl_benchmark = {
-        enable         = var.nccl_benchmark_enable
-        schedule       = var.nccl_benchmark_schedule
-        min_threshold  = var.nccl_benchmark_min_threshold
-        use_infiniband = var.nccl_use_infiniband
-      }
-
       nodes = {
         accounting = {
           enabled              = var.accounting_enabled
