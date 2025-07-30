@@ -361,37 +361,6 @@ slurm_exporter_enabled = true
 slurm_shared_memory_size_gibibytes = 1024
 
 # endregion Config
-
-#----------------------------------------------------------------------------------------------------------------------#
-#                                                                                                                      #
-#                                                    NCCL benchmark                                                    #
-#                                                                                                                      #
-#----------------------------------------------------------------------------------------------------------------------#
-# region NCCL benchmark
-
-# Whether to enable NCCL benchmark CronJob to benchmark GPU performance.
-# It won't take effect in case of 1-GPU hosts.
-# By default, false.
-# ---
-nccl_benchmark_enable = false
-
-# NCCL benchmark's CronJob schedule.
-# By default, `0 */3 * * *` - every 3 hour.
-# ---
-nccl_benchmark_schedule = "0 */3 * * *"
-
-# Minimal threshold of NCCL benchmark for GPU performance to be considered as acceptable.
-# By default, 420.
-# ---
-nccl_benchmark_min_threshold = 420
-
-# Use infiniband defines using NCCL_P2P_DISABLE=1 NCCL_SHM_DISABLE=1 NCCL_ALGO=Ring env variables for test.
-# By default, false
-# ---
-nccl_use_infiniband = false
-
-# endregion NCCL benchmark
-
 #----------------------------------------------------------------------------------------------------------------------#
 #                                                                                                                      #
 #                                                       Telemetry                                                      #

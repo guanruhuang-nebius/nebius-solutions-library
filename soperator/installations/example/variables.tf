@@ -50,17 +50,6 @@ data "nebius_iam_v1_tenant" "this" {
   id = var.iam_tenant_id
 }
 
-variable "o11y_iam_project_id" {
-  description = "ID of the IAM project for O11y."
-  type        = string
-  nullable    = false
-
-  validation {
-    condition     = startswith(var.o11y_iam_project_id, "project-")
-    error_message = "ID of the IAM project must start with `project-`."
-  }
-}
-
 variable "o11y_iam_tenant_id" {
   description = "ID of the IAM tenant for O11y."
   type        = string
@@ -69,17 +58,6 @@ variable "o11y_iam_tenant_id" {
   validation {
     condition     = startswith(var.o11y_iam_tenant_id, "tenant-")
     error_message = "ID of the IAM tenant must start with `tenant-`."
-  }
-}
-
-variable "o11y_iam_group_id" {
-  description = "ID of the IAM group for O11y."
-  type        = string
-  nullable    = false
-
-  validation {
-    condition     = startswith(var.o11y_iam_group_id, "group-")
-    error_message = "ID of the IAM group must start with `group-`."
   }
 }
 
@@ -773,34 +751,6 @@ variable "slurm_shared_memory_size_gibibytes" {
 }
 
 # endregion Config
-
-# region NCCL benchmark
-
-variable "nccl_benchmark_enable" {
-  description = "Whether to enable NCCL benchmark CronJob to benchmark GPU performance. It won't take effect in case of 1-GPU hosts."
-  type        = bool
-  default     = false
-}
-
-variable "nccl_benchmark_schedule" {
-  description = "NCCL benchmark's CronJob schedule."
-  type        = string
-  default     = "0 */3 * * *"
-}
-
-variable "nccl_benchmark_min_threshold" {
-  description = "Minimal threshold of NCCL benchmark for GPU performance to be considered as acceptable."
-  type        = number
-  default     = 420
-}
-
-variable "nccl_use_infiniband" {
-  description = "Use infiniband defines using NCCL_P2P_DISABLE=1 NCCL_SHM_DISABLE=1 NCCL_ALGO=Ring env variables for test."
-  type        = bool
-  default     = false
-}
-
-# endregion NCCL benchmark
 
 # region Telemetry
 

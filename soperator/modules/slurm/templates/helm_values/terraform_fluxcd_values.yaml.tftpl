@@ -34,7 +34,6 @@ resources:
           enabled: ${telemetry_enabled}
           clusterName: ${cluster_name}
           publicEndpointEnabled: ${public_o11y_enabled}
-          projectId: ${iam_project_id}
           region: ${region}
           opentelemetry:
             enabled: ${telemetry_enabled}
@@ -356,18 +355,6 @@ resources:
             populateJail:
               k8sNodeFilterName: ${slurm_cluster.k8s_node_filters.system.name}
 
-            ncclSettings:
-              topologyType: "${slurm_cluster.nccl_topology_type}"
-
-            periodicChecks:
-              ncclBenchmark:
-                enabled: ${slurm_cluster.nccl_benchmark.enable}
-                k8sNodeFilterName: ${slurm_cluster.k8s_node_filters.controller.name}
-                schedule: "${slurm_cluster.nccl_benchmark.schedule}"
-                ncclArguments:
-                  thresholdMoreThan: ${slurm_cluster.nccl_benchmark.min_threshold}
-                  useInfiniband: ${slurm_cluster.nccl_benchmark.use_infiniband}
-
             slurmConfig:
               defMemPerNode: ${floor(slurm_cluster.nodes.worker.resources.memory * 1024)}
 
@@ -638,6 +625,11 @@ resources:
                     cpu: ${slurm_cluster.nodes.rest.resources.cpu * 1000}m
                     memory: ${slurm_cluster.nodes.rest.resources.memory}Gi
                     ephemeralStorage: ${slurm_cluster.nodes.rest.resources.ephemeral_storage}Gi
+                customInitContainers:
+                  - name: ensure-jail-virtiofs
+                    image: cr.eu-north1.nebius.cloud/soperator/busybox
+                    volumeMounts: [{ name: jail, mountPath: /volume-mount }]
+                    command: ["grep", " /volume-mount virtiofs ", "/proc/mounts"]
 
             sConfigController:
               node:
