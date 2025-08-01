@@ -39,3 +39,5 @@ These samples mainly use [Terraform](https://www.terraform.io/) to deploy archit
 These solutions will also require you to install the [Nebius AI CLI](https://docs.nebius.ai/cli/).
 
 More general documentation about Nebius AI can be found [here](https://docs.nebius.ai/).
+
+Testing
