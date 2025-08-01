@@ -48,7 +48,7 @@ jobs:
         run: |
           # Example using `sed` for a simple text file
           NEW_VERSION="1.0.1"
-          sed -i "s/version: .*/version: ${NEW_VERSION}/" version.yaml
+          sed -i "s/.*/${NEW_VERSION}/" version.yaml
 
       - name: Commit and push changes
         run: |
