@@ -92,6 +92,7 @@ variable "node_group_workers" {
     gpu_cluster = optional(object({
       infiniband_fabric = string
     }))
+    preemptible = optional(object({}))
     nodeset_index = number
     subset_index  = number
   }))
@@ -171,4 +172,10 @@ variable "node_ssh_access_users" {
     public_keys = list(string)
   }))
   default = []
+}
+
+variable "use_preinstalled_gpu_drivers" {
+  description = "Enable preinstalled mode for worker nodes."
+  type        = bool
+  default     = false
 }

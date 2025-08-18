@@ -11,7 +11,7 @@ resource "nebius_compute_v1_disk" "nfs-storage-disk" {
   count = var.number_raid_disks
 
   parent_id        = var.parent_id
-  name = format("nfs-storage-disk-%02d", count.index + 1)
+  name = format("nfs-storage-disk-%s-%02d", var.nfs_disk_name_suffix, count.index + 1)
 
   block_size_bytes = var.disk_block_size
   size_bytes       = var.nfs_size

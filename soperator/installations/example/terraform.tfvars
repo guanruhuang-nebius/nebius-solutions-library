@@ -25,7 +25,12 @@ company_name = ""
 #----------------------------------------------------------------------------------------------------------------------#
 # region Storage
 
+# Whether to store the controller state on filestore or network SSD.
+controller_state_on_filestore = false
+
 # Shared filesystem to be used on controller nodes.
+# Deprecated: Starting with version 1.22, this variable isn't used, as controller state is stored on network SSD disks.
+# Remains for the backward compatibility.
 # ---
 filestore_controller_spool = {
   spec = {
@@ -59,7 +64,7 @@ filestore_jail = {
   }
 }
 
-# Additional (Optional) shared filesystems to be mounted inside jail.
+# Additional shared filesystems to be mounted inside jail.
 # If a big filesystem is needed it's better to deploy this additional storage because jails bigger than 12 TiB
 # ARE NOT BACKED UP by default.
 # ---
@@ -160,7 +165,7 @@ nfs = {
 
 # Version of soperator.
 # ---
-slurm_operator_version = "1.21.10"
+slurm_operator_version = "1.21.11"
 
 # Is the version of soperator stable or not.
 # ---
@@ -170,7 +175,6 @@ slurm_operator_stable = true
 # By default, "default".
 # ---
 slurm_partition_config_type = "default"
-
 # Partition config in case of `custom` slurm_partition_config_type.
 # Each string must be started with `PartitionName`.
 # By default, empty list.
@@ -288,7 +292,12 @@ slurm_nodeset_workers = [{
   gpu_cluster = {
     infiniband_fabric = ""
   }
+  # Change to preemptible = {} in case you want to use preemptible nodes
+  preemptible = null
 }]
+
+# Driverfull mode is used to run Slurm jobs with GPU drivers installed on the worker nodes.
+use_preinstalled_gpu_drivers = true
 
 # Configuration of Slurm Login node set.
 # ---
@@ -377,6 +386,16 @@ telemetry_enabled = true
 # By default, true.
 # ---
 dcgm_job_mapping_enabled = true
+
+# Configuration of the Soperator Notifier (https://github.com/nebius/soperator/tree/main/helm/soperator-notifier).
+# ---
+# soperator_notifier = {
+#   enabled           = true
+#   slack_webhook_url = "https://hooks.slack.com/services/X/Y/Z"
+# }
+soperator_notifier = {
+  enabled = false
+}
 
 public_o11y_enabled = true
 

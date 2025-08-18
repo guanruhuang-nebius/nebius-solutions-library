@@ -14,6 +14,11 @@ variable "operator_stable" {
   default     = true
 }
 
+variable "iam_tenant_id" {
+  description = "ID of the IAM tenant."
+  type        = string
+}
+
 variable "iam_project_id" {
   description = "ID of the IAM project."
   type        = string
@@ -126,7 +131,7 @@ variable "resources" {
   # TODO: remove when node sets are supported
   validation {
     condition     = length(var.resources.worker) == 1
-    error_message = "Only one worker node is supported."
+    error_message = "Only one worker nodeset is supported."
   }
 }
 
@@ -224,6 +229,11 @@ variable "filestores" {
 # endregion Filestore
 
 # region Disks
+variable "controller_state_on_filestore" {
+  description = "Whether to use filestore for controller node storage (when true) or PVC (when false)."
+  type        = bool
+  default     = false
+}
 
 variable "node_local_jail_submounts" {
   description = "Node-local disks to be mounted inside jail."
@@ -312,12 +322,6 @@ variable "dcgm_job_map_dir" {
 
 # region Accounting
 
-variable "mariadb_operator_namespace" {
-  description = "Namespace for MariaDB operator."
-  type        = string
-  default     = "mariadb-operator-system"
-}
-
 variable "accounting_enabled" {
   description = "Whether to enable accounting."
   type        = bool
@@ -403,6 +407,18 @@ variable "public_o11y_enabled" {
   description = "Whether to enable public observability endpoints."
   type        = bool
   default     = true
+}
+
+variable "soperator_notifier" {
+  description = "Configuration of the Soperator Notifier (https://github.com/nebius/soperator/tree/main/helm/soperator-notifier)."
+  type = object({
+    enabled           = bool
+    slack_webhook_url = optional(string)
+  })
+  default = {
+    enabled = false
+  }
+  nullable = false
 }
 
 variable "create_pvcs" {
@@ -634,4 +650,10 @@ variable "region" {
   description = "Region where the Slurm cluster is deployed."
   type        = string
   default     = "eu-north1"
+}
+
+variable "use_preinstalled_gpu_drivers" {
+  description = "Whether to use preinstalled GPU drivers."
+  type        = bool
+  default     = false
 }

@@ -97,6 +97,9 @@ resources:
                 spec:
                   extraArgs:
                     promscrape.maxScrapeSize: "33554432"
+                  externalLabels:
+                    iam_tenant_id: ${iam_tenant_id}
+                    iam_project_id: ${iam_project_id}
                   resources:
                     requests:
                       memory: ${resources.vm_agent.memory}
@@ -338,6 +341,13 @@ resources:
                   path: /sys
                   type: Directory
 
+              %{~ if slurm_cluster.use_preinstalled_gpu_drivers~}
+              - hostPath:
+                  path: /
+                  type: ""
+                name: nvidia-driver-root
+              %{~ endif ~}
+
               %{~ if slurm_cluster.node_local_image_storage.enabled ~}
               - name: image-storage
                 configMap:
@@ -356,7 +366,13 @@ resources:
               k8sNodeFilterName: ${slurm_cluster.k8s_node_filters.system.name}
 
             slurmConfig:
-              defMemPerNode: ${floor(slurm_cluster.nodes.worker.resources.memory * 1024)}
+              # Allocate half of the available memory by default
+              defMemPerNode: ${floor(slurm_cluster.nodes.worker.resources.memory * 1024 / 2)}
+
+            periodicChecks:
+              ncclBenchmark:
+                enabled: false
+                k8sNodeFilterName: system
 
             slurmNodes:
               accounting:
@@ -429,7 +445,20 @@ resources:
                     image: cr.eu-north1.nebius.cloud/soperator/busybox
                     volumeMounts: [{ name: jail, mountPath: /volume-mount }]
                     command: ["grep", " /volume-mount virtiofs ", "/proc/mounts"]
-
+                volumes:
+                  spool:
+                    %{~ if slurm_cluster.controller_state_on_filestore ~}
+                    volumeSourceName: "controller-spool"
+                    volumeClaimTemplateSpec: null
+                    %{~ else ~}
+                    volumeClaimTemplateSpec:
+                      accessModes:
+                        - ReadWriteOnce
+                      resources:
+                        requests:
+                          storage: 50Gi
+                      storageClassName: "compute-csi-network-ssd-ext4"
+                    %{~ endif ~}
               worker:
                 size: ${slurm_cluster.nodes.worker.size}
                 k8sNodeFilterName: ${slurm_cluster.k8s_node_filters.worker.name}
@@ -543,6 +572,12 @@ resources:
                     - name: hpc-jobs-dir
                       mountPath: ${dcgm_job_map_dir}
                       volumeSourceName: hpc-jobs-dir
+                    %{~ endif ~}
+                    %{~ if slurm_cluster.use_preinstalled_gpu_drivers~}
+                    - name: nvidia-driver-root
+                      mountPath: /run/nvidia/driver
+                      volumeSourceName: nvidia-driver-root
+                      readOnly: false
                     %{~ endif ~}
                   sharedMemorySize: ${slurm_cluster.nodes.worker.shared_memory}Gi
 
@@ -758,3 +793,11 @@ resources:
                   cpu: ${resources.node_configurator.requests.cpu * 1000}m
                 limits:
                   memory: ${resources.node_configurator.limits.memory}Gi
+
+        notifier:
+          enabled: ${notifier.enabled}
+          %{~ if notifier.enabled ~}
+          values:
+            slack:
+              webhookUrl: "${notifier.slack_webhook_url}"
+          %{~ endif ~}

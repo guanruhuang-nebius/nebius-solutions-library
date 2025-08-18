@@ -110,6 +110,7 @@ resource "helm_release" "soperator_fluxcd_cm" {
     backups_enabled    = var.backups_enabled
     telemetry_enabled  = var.telemetry_enabled
     accounting_enabled = var.accounting_enabled
+    iam_tenant_id      = var.iam_tenant_id
     iam_project_id     = var.iam_project_id
 
     dcgm_job_mapping_enabled = var.dcgm_job_mapping_enabled
@@ -128,6 +129,7 @@ resource "helm_release" "soperator_fluxcd_cm" {
     vmstack_crds_version               = var.vmstack_crds_version
     vmlogs_version                     = var.vmlogs_version
     dcgm_job_map_dir                   = var.dcgm_job_map_dir
+    notifier                           = var.soperator_notifier
 
     name                = var.name
     cluster_name        = var.cluster_name
@@ -169,6 +171,8 @@ resource "helm_release" "soperator_fluxcd_cm" {
         slurm_raw_config  = var.slurm_partition_raw_config
       }
 
+      use_preinstalled_gpu_drivers = var.use_preinstalled_gpu_drivers
+
       slurm_worker_features     = var.slurm_worker_features
       slurm_health_check_config = var.slurm_health_check_config
 
@@ -181,6 +185,8 @@ resource "helm_release" "soperator_fluxcd_cm" {
         name       = submount.name
         mount_path = submount.mount_path
       }]
+
+      controller_state_on_filestore = var.controller_state_on_filestore
 
       nfs = var.nfs
 

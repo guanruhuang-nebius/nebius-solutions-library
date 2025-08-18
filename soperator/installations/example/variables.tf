@@ -115,6 +115,12 @@ variable "company_name" {
 
 # region Storage
 
+variable "controller_state_on_filestore" {
+  description = "Whether to use Filestore for controller node boot disk (true = Filestore, false = PVC)."
+  type        = bool
+  default     = false
+}
+
 variable "filestore_controller_spool" {
   description = "Shared filesystem to be used on controller nodes."
   type = object({
@@ -171,6 +177,12 @@ locals {
   var.filestore_jail.spec.size_gibibytes)
 }
 
+variable "allow_empty_jail_submounts" {
+  description = "Flag for disabling validation for non-empty jail submounts."
+  type        = bool
+  default     = false
+}
+
 variable "filestore_jail_submounts" {
   description = "Shared filesystems to be mounted inside jail."
   type = list(object({
@@ -193,6 +205,11 @@ variable "filestore_jail_submounts" {
       (sm.existing == null && sm.spec != null)
     ]) == length(var.filestore_jail_submounts)
     error_message = "All submounts must have one of `existing` or `spec` provided."
+  }
+
+  validation {
+    condition     = var.allow_empty_jail_submounts || length(var.filestore_jail_submounts) >= 1
+    error_message = "Creating clusters without jail submounts is not allowed."
   }
 }
 
@@ -395,6 +412,12 @@ variable "k8s_version" {
   }
 }
 
+variable "use_preinstalled_gpu_drivers" {
+  description = "Enable preinstalled mode for worker nodes."
+  type        = bool
+  default     = false
+}
+
 variable "k8s_cluster_node_ssh_access_users" {
   description = "SSH user credentials for accessing k8s nodes."
   type = list(object({
@@ -512,6 +535,14 @@ variable "slurm_nodeset_system" {
       block_size_kibibytes = 4
     }
   }
+  validation {
+    condition     = var.slurm_nodeset_system.boot_disk.size_gibibytes >= 128
+    error_message = "Boot disks for system nodes must be at least 128 GiB."
+  }
+  validation {
+    condition     = var.slurm_nodeset_system.min_size >= 3
+    error_message = "Minimum size of the system node group must be at least 3."
+  }
 }
 
 variable "slurm_nodeset_controller" {
@@ -530,7 +561,7 @@ variable "slurm_nodeset_controller" {
   })
   nullable = false
   default = {
-    size = 1
+    size = 2
     resource = {
       platform = "cpu-d3"
       preset   = "16vcpu-64gb"
@@ -540,6 +571,14 @@ variable "slurm_nodeset_controller" {
       size_gibibytes       = 128
       block_size_kibibytes = 4
     }
+  }
+  validation {
+    condition     = var.slurm_nodeset_controller.boot_disk.size_gibibytes >= 128
+    error_message = "Boot disks for controller nodes must be at least 128 GiB."
+  }
+  validation {
+    condition     = var.slurm_nodeset_controller.size >= 2
+    error_message = "Size of the controller node group must be at least 2."
   }
 }
 
@@ -563,6 +602,7 @@ variable "slurm_nodeset_workers" {
     gpu_cluster = optional(object({
       infiniband_fabric = string
     }))
+    preemptible = optional(object({}))
   }))
   nullable = false
   default = [{
@@ -575,7 +615,7 @@ variable "slurm_nodeset_workers" {
     }
     boot_disk = {
       type                 = "NETWORK_SSD"
-      size_gibibytes       = 128
+      size_gibibytes       = 512
       block_size_kibibytes = 4
     }
   }]
@@ -592,6 +632,14 @@ variable "slurm_nodeset_workers" {
       (worker.size % worker.nodes_per_nodegroup == 0)
     ])
     error_message = "Worker count must be divisible by nodes_per_nodegroup."
+  }
+
+  validation {
+    condition = alltrue([
+      for worker in var.slurm_nodeset_workers :
+      (worker.boot_disk.size_gibibytes >= 512)
+    ])
+    error_message = "Boot disks for worker nodes must be at least 512 GiB."
   }
 }
 
@@ -618,9 +666,17 @@ variable "slurm_nodeset_login" {
     }
     boot_disk = {
       type                 = "NETWORK_SSD"
-      size_gibibytes       = 128
+      size_gibibytes       = 256
       block_size_kibibytes = 4
     }
+  }
+  validation {
+    condition     = var.slurm_nodeset_login.boot_disk.size_gibibytes >= 256
+    error_message = "Boot disks for login nodes must be at least 256 GiB."
+  }
+  validation {
+    condition     = var.slurm_nodeset_login.size >= 1
+    error_message = "Size of the login node group must be at least 1."
   }
 }
 
@@ -637,8 +693,21 @@ variable "slurm_nodeset_accounting" {
       block_size_kibibytes = number
     })
   })
-  nullable = true
-  default  = null
+  default  = {
+    resource = {
+      platform = "cpu-d3"
+      preset   = "8vcpu-32gb"
+    }
+    boot_disk = {
+      type                 = "NETWORK_SSD"
+      size_gibibytes       = 128
+      block_size_kibibytes = 4
+    }
+  }
+  validation {
+    condition     = var.slurm_nodeset_accounting.boot_disk.size_gibibytes >= 128
+    error_message = "Boot disks for accounting nodes must be at least 128 GiB."
+  }
 }
 
 resource "terraform_data" "check_slurm_nodeset_accounting" {
@@ -652,6 +721,7 @@ resource "terraform_data" "check_slurm_nodeset_accounting" {
     }
   }
 }
+
 
 resource "terraform_data" "check_slurm_nodeset" {
   for_each = merge({
@@ -770,6 +840,27 @@ variable "dcgm_job_mapping_enabled" {
   description = "Whether to enable HPC job mapping by installing a separate dcgm-exporter"
   type        = bool
   default     = true
+}
+
+variable "soperator_notifier" {
+  description = "Configuration of the Soperator Notifier (https://github.com/nebius/soperator/tree/main/helm/soperator-notifier)."
+  type = object({
+    enabled           = bool
+    slack_webhook_url = optional(string)
+  })
+  default = {
+    enabled = false
+  }
+  nullable = false
+
+  validation {
+    condition = (
+      var.soperator_notifier.enabled
+      ? coalesce(var.soperator_notifier.slack_webhook_url, "not_provided") != "not_provided"
+      : true
+    )
+    error_message = "Slack webhook URL must be provided if Soperator Notifier is enabled."
+  }
 }
 
 # endregion Telemetry

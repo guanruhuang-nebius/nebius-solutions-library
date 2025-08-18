@@ -41,8 +41,8 @@ resource "terraform_data" "wait_for_create_soperatorchecks_user" {
 resource "helm_release" "create_nebius_user" {
   count = var.checks.create_nebius_user ? 1 : 0
 
-  depends_on = [ 
-    terraform_data.wait_for_create_soperatorchecks_user 
+  depends_on = [
+    terraform_data.wait_for_create_soperatorchecks_user
   ]
 
   name       = "create-nebius-user-check"
@@ -65,8 +65,8 @@ resource "helm_release" "create_nebius_user" {
 resource "helm_release" "install_package_check" {
   count = var.checks.install_package_check_enabled ? 1 : 0
 
-  depends_on = [ 
-    terraform_data.wait_for_create_soperatorchecks_user 
+  depends_on = [
+    terraform_data.wait_for_create_soperatorchecks_user
   ]
 
   name       = "install-package-check"
@@ -88,8 +88,8 @@ resource "helm_release" "install_package_check" {
 resource "helm_release" "ssh_check" {
   count = var.checks.ssh_check_enabled ? 1 : 0
 
-  depends_on = [ 
-    terraform_data.wait_for_create_soperatorchecks_user 
+  depends_on = [
+    terraform_data.wait_for_create_soperatorchecks_user
   ]
 
   name       = "ssh-check"
@@ -133,12 +133,36 @@ resource "helm_release" "upgrade_cuda" {
   wait = true
 }
 
+resource "helm_release" "soperator_outputs_logs_cleaner" {
+  count = var.checks.soperator_outputs_logs_cleaner_enabled ? 1 : 0
+
+  depends_on = [
+    terraform_data.wait_for_create_soperatorchecks_user
+  ]
+
+  name       = "soperator-outputs-logs-cleaner"
+  repository = local.helm.repository.raw
+  chart      = local.helm.chart.raw
+  version    = local.helm.version.raw
+
+  create_namespace = true
+  namespace        = var.slurm_cluster_namespace
+
+  values = [templatefile("${path.module}/templates/soperator_outputs_logs_cleaner.tftpl", {
+    slurm_cluster_namespace = var.slurm_cluster_namespace
+    slurm_cluster_name      = var.slurm_cluster_name
+  })]
+
+  wait = true
+}
+
 resource "terraform_data" "wait_for_checks" {
   depends_on = [
     helm_release.create_nebius_user,
     helm_release.install_package_check,
     helm_release.ssh_check,
     helm_release.upgrade_cuda,
+    helm_release.soperator_outputs_logs_cleaner,
   ]
 
   provisioner "local-exec" {
